@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class PaintCalculator {
 
-    private List<Room> roomList = new ArrayList<Room>();
+    private List<Paintable> paintableList = new ArrayList<Paintable>();
     private Scanner keyboard;
 
     public static void main(String[] args) {
@@ -17,7 +17,7 @@ public class PaintCalculator {
 
         int option = 0;
 
-        while (option != 5) {
+        while (option != 6) {
             printMenu();
 
             String s = keyboard.nextLine();
@@ -37,6 +37,9 @@ public class PaintCalculator {
                         printRooms();
                         break;
                     case 5:
+                        createCounter();
+                        break;
+                    case 6:
                         System.out.println("Goodbye");
                         System.exit(0);
                 }
@@ -48,11 +51,11 @@ public class PaintCalculator {
     }
 
     private void printRooms() {
-        if (roomList.isEmpty()) {
+        if (paintableList.isEmpty()) {
             System.out.println("No rooms yet");
         }
 
-        for (Room room : roomList) {
+        for (Paintable room : paintableList) {
             System.out.println(room.toString());
         }
     }
@@ -63,8 +66,19 @@ public class PaintCalculator {
         System.out.println("2. Write rooms to file");
         System.out.println("3. Read rooms from file");
         System.out.println("4. View rooms");
-        System.out.println("5. Exit");
+        System.out.println("5. Add a new counter");
+        System.out.println("6. Exit");
         System.out.println();
+    }
+
+    private void readFile() {
+        RoomReader reader = new RoomReader();
+        paintableList = reader.readRoomFile("rooms.dat");
+    }
+
+    private void writeFile() {
+        RoomWriter writer = new RoomWriter();
+        writer.writeRoomFile("rooms.dat", paintableList);
     }
 
     private int promptForDimension(String name) {
@@ -84,7 +98,7 @@ public class PaintCalculator {
 
         try {
             Room room = new Room(length, width, height);
-            roomList.add(room);
+            paintableList.add(room);
 
             System.out.println("Room successfully created");
         } catch (BadWidthException | BadHeightException e) {
@@ -93,13 +107,21 @@ public class PaintCalculator {
 
     }
     
-    private void writeFile() {
-        RoomWriter rw = new RoomWriter();
-        rw.writeRoomFile("rooms.txt", roomList);
-    }
-    
-    private void readFile() {
-        RoomReader rr = new RoomReader();
-        rr.readRoomFile("rooms.txt");
+    private void createCounter() {
+        int cLength, cWidth, cHeight;
+        String surfaceMaterial;
+        
+        System.out.print("Enter the counter's length: ");
+        cLength = keyboard.nextInt();
+        System.out.print("Enter the counter's width: ");
+        cWidth = keyboard.nextInt();
+        System.out.print("Enter the counter's height: ");
+        cHeight = keyboard.nextInt();
+        keyboard.nextLine();
+        System.out.print("What material is the counter made of: ");
+        surfaceMaterial = keyboard.nextLine();
+        Counter c = new Counter (cWidth, cHeight, cLength, surfaceMaterial);
+        paintableList.add(c);
+        System.out.println("Counter successfully created");
     }
 }

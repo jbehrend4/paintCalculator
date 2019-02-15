@@ -1,7 +1,7 @@
 
 import java.io.Serializable;
 
-public class Wall implements Serializable{
+public class Wall implements Serializable {
 
     private double width;
     private double height;

@@ -4,24 +4,33 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.List;
 
-public class RoomWriter{
-    
-    private String fileName;
-    private List<Room> roomList;
-    
-    public void writeRoomFile(String fileName, List<Room> roomList) {
-        this.fileName = fileName;
-        this.roomList = roomList;
+public class RoomWriter {
+
+    public void writeRoomFile(String fileName, List<Paintable> roomList) {
+        ObjectOutputStream oos = null;
+
         try {
-            FileOutputStream fo = new FileOutputStream("rooms.txt");
-            ObjectOutputStream output = new ObjectOutputStream(fo);
-            output.writeObject(roomList);
-            output.close();
-            fo.close();
-            System.out.println("Data saved in rooms.txt");
+            // Create the streams
+            FileOutputStream fos = new FileOutputStream(fileName);
+            oos = new ObjectOutputStream(fos);
+
+            // Write the objects
+            for (Paintable room : roomList) {
+                oos.writeObject(room);
+            }
+
+            System.out.println("Rooms successfully written");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            // Close the file
+            try {
+                if (oos != null) {
+                    oos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        catch (IOException e) {
-            System.out.println("The file does not exist.");            
-        }        
     }
 }
